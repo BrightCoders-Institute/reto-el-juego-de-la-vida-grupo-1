@@ -1,18 +1,9 @@
-// let grid = [ [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-// [ 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 ],
-// [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ],
-// [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-// [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-// [ 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 ],
-// [ 0, 0, 1, 1, 0, 0, 0, 0, 0, 0 ],
-// [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ],
-// [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ],
-// [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-// ];
-
-
 let rows = 10;
 let columns = 10;
+let sum;
+let lastSum = 0
+let isAlive = true;
+
 let grid=creategrid();
 setinitialgrid();
 
@@ -65,7 +56,6 @@ function countLiveNeighbors(row, col) {
 				grid[neighborRow][neighborCol] === 1
 			) {
 				count++;
-				//   console.log(count);
 			}
 		}
 	}
@@ -76,22 +66,31 @@ function simulate() {
 	// Print the initial grid
 	printGrid();
 
-	// Simulate each generation
-	for (let generation = 1; generation <= 5; generation++) {
+	//Simulate each generation
+	let count = 0;
+	while (isAlive) {
 		updateGrid();
 		printGrid();
-	}
+		// Stop iteration
+		count += 1;
+		if(count > 50 ) {
+			console.log("llego a los 50 ")
+			break;
+		}
+	};
+	// for (let generation = 1; generation <= 5; generation++) {
+	// 	updateGrid();
+	// 	printGrid();
+	// }
 }
 
 function updateGrid() {
-
-	const newGrid = creategrid()
+	const newGrid = creategrid();
 
 	for (let row = 0; row < rows; row++) {
 		for (let col = 0; col < columns; col++) {
 			const cell = grid[row][col];
 			const liveNeighbors = countLiveNeighbors(row, col);
-			// console.log(liveNeighbors);
 
 			if (cell === 1 && (liveNeighbors < 2 || liveNeighbors > 3)) {
 				newGrid[row][col] = 0; // Cell dies due to underpopulation or overpopulation
@@ -103,9 +102,25 @@ function updateGrid() {
 		}
 	}
 
+	if(grid === newGrid) {
+		console.log("Entro al grid igual a NewGrid")
+		isAlive = false;
+	}
 	grid = newGrid;
-	// console.log(grid);
+	let sum = grid
+		.map((fila) => fila.reduce((acumulador, valor) => acumulador + valor, 0))
+		.reduce((acumulador, valor) => acumulador + valor, 0);
+	if(sum === lastSum) {
+		isAlive = false;
+		console.log("Se ciclo")
+	}
+	if (sum === 0) {
+		console.log("Suma igual a 0")
+		isAlive = false;
+	}
+	lastSum = sum
+
 }
 
 
-simulate()
+simulate();
