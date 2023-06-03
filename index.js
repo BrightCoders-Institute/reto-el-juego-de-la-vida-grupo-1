@@ -4,7 +4,7 @@ let sum;
 let lastSum = 0
 let isAlive = true;
 
-let grid=creategrid();
+let grid = creategrid();
 setinitialgrid();
 
 function creategrid() {
@@ -30,7 +30,7 @@ function printGrid() {
 	for (let row = 0; row < rows; row++) {
 		let rowString = "";
 		for (let col = 0; col < columns; col++) {
-			rowString += grid[row][col] === 1 ? " X " : " - ";
+			rowString += grid[row][col] === 1 ? '😀' : '💀';
 		}
 		console.log(rowString);
 	}
@@ -78,10 +78,6 @@ function simulate() {
 			break;
 		}
 	};
-	// for (let generation = 1; generation <= 5; generation++) {
-	// 	updateGrid();
-	// 	printGrid();
-	// }
 }
 
 function updateGrid() {
@@ -103,24 +99,39 @@ function updateGrid() {
 	}
 
 	if(grid === newGrid) {
-		console.log("Entro al grid igual a NewGrid")
 		isAlive = false;
 	}
+
+	// Compare two 2d arrays
+	const a1 = [].concat(...grid);
+	const a2 = [].concat(...newGrid);
+
+	function areEqual (array1, array2) {
+		return array1.every((element, index) => {
+			if (element === array2[index]) {
+				return true;
+			}
+			return false;
+		});
+	}
+
+	if (areEqual(a1, a2)) {
+		isAlive = false;
+	}
+
 	grid = newGrid;
+
 	let sum = grid
 		.map((fila) => fila.reduce((acumulador, valor) => acumulador + valor, 0))
 		.reduce((acumulador, valor) => acumulador + valor, 0);
-	if(sum === lastSum) {
-		isAlive = false;
-		console.log("Se ciclo")
-	}
+
 	if (sum === 0) {
-		console.log("Suma igual a 0")
+		console.log("Suma igual a 0");
 		isAlive = false;
 	}
-	lastSum = sum
+
+	lastSum = sum;
 
 }
-
 
 simulate();
