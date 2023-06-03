@@ -26,7 +26,9 @@ function setinitialgrid() {
 }
 
 function printGrid() {
-	console.log("Generation:");
+	console.log("--------------------");
+	console.log(" THE--GAME--OF--LIFE");
+	console.log("--------------------");
 	for (let row = 0; row < rows; row++) {
 		let rowString = "";
 		for (let col = 0; col < columns; col++) {
@@ -34,7 +36,7 @@ function printGrid() {
 		}
 		console.log(rowString);
 	}
-	console.log("-------------------");
+	console.log("--------------------");
 }
 
 function countLiveNeighbors(row, col) {
@@ -62,6 +64,11 @@ function countLiveNeighbors(row, col) {
 	return count;
 }
 
+
+function borrarConsola() {
+	process.stdout.write('\x1Bc'); // Clean console
+}
+
 function simulate() {
 	// Print the initial grid
 	printGrid();
@@ -69,8 +76,11 @@ function simulate() {
 	//Simulate each generation
 	let count = 0;
 	while (isAlive) {
-		updateGrid();
-		printGrid();
+		setTimeout(() => {
+			borrarConsola(); // Clean console before updating grid
+			updateGrid();
+			printGrid();
+		}, 650 * count);
 		// Stop iteration
 		count += 1;
 		if(count > 50 ) {
@@ -126,7 +136,7 @@ function updateGrid() {
 		.reduce((acumulador, valor) => acumulador + valor, 0);
 
 	if (sum === 0) {
-		console.log("Suma igual a 0");
+		console.log("-EXTINCTION-");
 		isAlive = false;
 	}
 
